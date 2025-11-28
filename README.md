@@ -1,71 +1,21 @@
-# Scaphoid Fracture Detection
+# 腕舟骨骨折偵測（Faster R-CNN）
 
-This project uses a Faster R-CNN model to detect scaphoid bones and fractures in X-ray images.
+以 Faster R-CNN 偵測 X 光影像中的腕舟骨與骨折位置，提供簡易 UI 與訓練腳本。
+詳細資訊可參照 report 
 
-## Project Structure
+## 快速開始
+- 安裝相依套件（自行建立 Python 環境，需含 PyTorch、Gradio 等）。
+- 啟動介面：
+  ```bash
+  python ui.py
+  ```
 
-```
-├───best_scaphoid_detection.pth     # Pre-trained model for scaphoid detection
-├───config                          # Configuration files
-├───pre.py                          # Preprocessing script
-├───train.py                        # Training script
-├───ui.py                           # Main application with Gradio UI
-├───fracture_detection              # Data for fracture detection
-│   ├───test
-│   └───train
-├───scaphoid_detection              # Data for scaphoid detection
-│   ├───annotations
-│   ├───images
-│   └───...
-├───tools                           # Helper scripts and modules
-│   ├───dataloader.py
-│   ├───fasterRCNN.py
-│   └───...
-└───...
-```
+## 訓練（可選）
+- 執行：
+  ```bash
+  python train.py
+  ```
+- 可於 `config/` 調整參數；資料請放於對應資料夾。
 
-## Installation
-
-1.  **Clone the repository:**
-    ```bash
-    git clone <your-repository-url>
-    cd <your-repository-name>
-    ```
-
-2.  **Create and activate a virtual environment:**
-    *   Using `conda`:
-        ```bash
-        conda create --name scaphoid-env python=3.11
-        conda activate scaphoid-env
-        ```
-    *   Using `venv`:
-        ```bash
-        python -m venv .venv
-        source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
-        ```
-
-3.  **Install the required dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-    *(Note: You will need to create a `requirements.txt` file. You can generate one using `pip freeze > requirements.txt` after installing your project's dependencies.)*
-
-## Usage
-
-To run the web interface for fracture detection:
-
-```bash
-python ui.py
-```
-
-This will launch a Gradio interface in your browser. You can upload an X-ray image to see the scaphoid detection and fracture classification results.
-
-## Training
-
-To train the scaphoid detection model:
-
-```bash
-python train.py
-```
-
-Make sure your datasets are correctly placed in the `scaphoid_detection` and `fracture_detection` directories. You can modify the training parameters in the `config` directory.
+## 注意
+- `scaphoid_detection/`（資料）未納入版本控制。
