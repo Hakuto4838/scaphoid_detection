@@ -1,0 +1,18 @@
+dataset_params:
+  im_train_path: "scaphoid_detection/train/images"
+  ann_train_path: "scaphoid_detection/train/annotations"
+  im_test_path: "scaphoid_detection/test/images"
+  ann_test_path: "scaphoid_detection/test/annotations"
+  num_classes: 2  # background + Scaphoid
+  contrast_range: [0.5, 1.5]
+
+train_params:
+  task_name: "scaphoid_detection"
+  ckpt_name: "scaphoid_detection.pth"
+  log_path: "training_log"
+  save_interval: 5
+  seed: 2486
+  lr: 0.001
+  acc_steps: 1
+  num_epochs: 60
+  lr_steps: [36, 48]

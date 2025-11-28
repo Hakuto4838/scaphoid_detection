@@ -1,0 +1,34 @@
+\subsection{class ROIHead}
+    \label{clsROI}
+    包含 ROIpooling 以及之後的分類回歸層
+    \paragraph{架構}
+    \begin{itemize}
+        \item \verb"num_classes=2", 分類背景或是舟骨
+        \item \verb"in_channels=512"，來自vgg16 產生的特徵圖
+        \item \verb"fc_inner_dim=1024"，兩層 fc
+        \item 一個 \verb"cls_layer"，一個 \verb"bbox_reg_layer"
+        
+    \end{itemize}
+
+    \paragraph{forward}
+    \begin{enumerate}
+        \item 輸入特徵圖(dim = 512)、proposals
+        \item (訓練時) 處理 target，控制 positive 提議框佔總target 比例，以免資料失衡
+        \item \verb"roi_pool", 將 proposals 框出的區域剪切並 pool 成同樣大小
+        \item 平坦層 $\rightarrow fc \times 2$
+        \item 分別用分類層與回歸層取得最後輸出
+        \item (訓練時) 計算 loss
+        \begin{itemize}
+            \item 分類 : \verb"cross_entropy"
+            \item 回歸(限非背景框) : \verb"smooth_l1_loss"
+            \item \verb"return cls_loss, loc_loss"
+        \end{itemize}
+        \item (非訓練時) : 
+        \begin{enumerate}
+            \item 將回歸結果套用在 proposals 上
+            \item 分類結果使用 softmax 歸一
+            \item 刪除分類為背景的框
+            \item 過濾過小、分數過低、NMS 篩選
+            \item 依據分數高低(信心程度)排序框，return boxes, scores, labels
+        \end{enumerate}
+    \end{enumerate}

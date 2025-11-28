@@ -1,0 +1,51 @@
+\subsection{class RPN}
+    \label{clsRPN}
+    包含 RPN 網路
+    \paragraph{架構}
+    \begin{itemize}
+        \item anchors size : 64, 128, 256 三種
+        \item anchors aspect ratios : 0.5, 1.0, 1.5 
+        \item 每個點上共 9 個 anchors
+        \item 輸入 vgg16 提取的特徵圖，dim=512
+        \item \verb"rpn_conv"一層 $3\times 3$ conv， dim = 512
+        \item 輸出結果分別輸入分類層及回歸層，dim 分別為 9、$9\times 4$
+       
+    \end{itemize}
+
+    \paragraph{forward}
+    \begin{enumerate}
+        \item 輸入vgg16產生的特徵圖
+        \item 經過 \verb"rpn_conv" 並 ReLU 處理
+        \item 產生的結果分別以 \verb"cls_layer", \verb"bbox_reg_layer" 產生提議框
+        \item 產生的資料轉成提議框:
+        \begin{enumerate}
+            \item 根據影像大小以及設定的 anchor size 產出所有anchors
+            \item 展開輸出，得到一個提議框列表
+            \item 將回歸層的輸出套用在原始 anchor，得到真正提議
+        \end{enumerate}
+        \item 提議框初步篩選
+        \begin{itemize}
+            \item 分數太低的先濾掉
+            \item nms 過濾掉重疊框
+        \end{itemize}
+        \item (訓練時) 處理 target
+        \begin{enumerate}
+            \item 根據與 label 的 IOU 判斷提議框為 positive or negative
+            \item 計算 label 標出的框與提議框的轉換距離，中心點標記是線性距離，寬高差距取 log
+            \item 避免訓練資料中 positive negative 比例懸殊造成失衡，依固定比例進行採樣
+        \end{enumerate}
+        \item (訓練時) 計算 loss
+        \begin{enumerate}
+            \item 回歸層使用 \verb"smooth_l1_loss" , $beta= 1/9$ (只計算 positive)
+            \item 分類層使用 cross entropy
+        \end{enumerate}
+        \item return proposals, scores, (訓練時) loss
+       
+    \end{enumerate}
+
+    \paragraph{其他工具}
+    \begin{itemize}
+        \item \verb"gen_anchors" : 在特徵圖的每個座標上產生9個 anchor，對應到原始 image 的位置上
+        \item \verb"assign_targets_to_anchors" : 判定anchors 是不是背景
+        \item \verb"filter_proposals" : 輸入 proposals 與 scores，篩選掉不良的提議 (依大小、分數、重疊)
+    \end{itemize}

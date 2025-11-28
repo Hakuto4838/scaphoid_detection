@@ -1,0 +1,58 @@
+% !TeX root = ./report/report.tex
+% 黃柏融 整理
+
+\documentclass[a4paper,12pt]{article}
+\usepackage{xeCJK}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subfigure}
+
+\usepackage{pdfpages} %插入PDF
+
+\usepackage{geometry}
+\usepackage{titlesec} % 自定义标题样
+\usepackage{listings} %取代 verb
+
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+\newfontfamily\frog{NotoSansEgyptianHieroglyphs-Regular.ttf}
+
+\setCJKmainfont[AutoFakeBold=2,AutoFakeSlant=.4]{NotoSansTC-Regular.ttf}
+
+\defaultCJKfontfeatures{AutoFakeBold=2,AutoFakeSlant=.4} %以後不用再設定粗斜
+\newCJKfontfamily\Kai{標楷體}       %定義指令\Kai則切換成標楷體
+\newCJKfontfamily\Hei{微軟正黑體}   %定義指令\Hei則切換成正黑體
+\newCJKfontfamily\NewMing{新細明體} %定義指令\NewMing則切換成新細明體
+
+\newcommand\fish{\frog\symbol{"1319F}}
+
+\titleformat{\section}
+  {\Hei \Large} % 使用常規字體，標題不再粗體
+  {\fish \,\thesection}{1em}{}
+
+\setlength{\parskip }{0.5em}
+%---------------------------------------------------------
+\begin{document}
+%---------------------------------------------------------
+\begin{flushleft} %基本資訊
+    \Large \textbf{IMAGE PROCESSING HW2 Report} \\
+    \NewMing \normalsize {P76134838 黃柏融} \\
+    Submission Date: \today
+\end{flushleft}
+%---------------------------------------------------------
+\tableofcontents
+
+%---------------------------------------------------------
+\input{class/outline.tex}
+
+\input{class/env.tex}
+
+\section{模型架構}
+\input{class/frcnn.tex}
+\input{class/rpn.tex}
+\input{class/roi.tex}
+
+\input{class/fail.tex}
+
+%---------------------------------------------------------
+\end{document}

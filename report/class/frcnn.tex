@@ -1,0 +1,36 @@
+\subsection{class FasterRCNN}
+    FasterRCNN 網路
+    \paragraph{架構}
+    \begin{itemize}
+        \item backbone : vgg16
+        \begin{itemize}
+            \item 載入預訓練模型
+            \item 去除最後的分類層
+            \item 前10層為基本特徵，不進行梯度計算
+        \end{itemize}
+        \item RPN 層，參考 class RPN (\ref{clsRPN})
+        \item ROIHead 層，參考 class ROIHead (\ref{clsROI})
+        \item \verb"num_classes"=2，舟骨及背景
+        \item \verb"img_mean" = 0.5，灰階影像進行單通道正規化
+        \item \verb"img_std " = 0.3，同上
+        \item \verb"min_size" = 1200，對輸入影像大小限制
+        \item \verb"max_size" = 1400
+       
+    \end{itemize}
+
+    \paragraph{forward}
+    \begin{enumerate}
+        \item 增加靈活性，檢測輸入影像若不為 Tensor 先行轉換
+        \item 將影像大小縮放至符合標準。 (訓練時) label bbox 一起轉換
+        \item 為了符合 vgg16 的要求，複製單通道成 3 通道
+        \item 影像經過 backbone 網路(vgg16) ，產生的特徵圖
+        \item 特徵圖經過 RPN ，產生 proposals
+        \item 特徵圖與proposals 經過 ROIHead，其包含了最後的分類及回歸，得到最終輸出的框及 scores
+        \item (非訓練時) 將提議框 resize ，以對應到未進行縮放的影像
+        \item return \verb"rpn_output", \verb"frcnn_output" 以供訓練
+    \end{enumerate}
+
+    \paragraph{其他工具}
+    \begin{itemize}
+        \item \verb"norm_resize_image" 輸入前會進行 resize，因此 frcnn 產出的框不符合原影像座標，此函數以線性插值將框轉換成原圖尺寸
+    \end{itemize}

@@ -1,0 +1,34 @@
+\graphicspath{{./fig/}}
+\section{Outline}
+以下說明提交的程式碼檔案概要
+
+    \paragraph{ui.py}
+    \begin{itemize}
+        \item for Demo
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.9\textwidth]{ui.png}
+            \label{figui}
+            \caption{圖形介面展示}
+        \end{figure}
+        \item Load Folder : 選擇 image dir，讀取後 Image Display 區域將顯示第一張圖片，並以 [index/Totol image number] 顯示目前的資料夾資料總數、目前影像名稱等等
+        \item Previous, Next : 切換上/下一張影像，切換後會自動執行 Detection，在區域中以紅框標示
+        \item Load label : 設定舟骨 label 資料夾，若有設定，且路徑中存在與當前影像相同名稱的json，以綠色框標示
+        \item load label2 : 設定 fracture label，只有在有設定舟骨 label 資料夾時才會生效，因為該 label 依賴舟骨 label 來將相對座標轉為絕對座標
+        \item Detection : 將目前影像輸入模型運算。並計算 IoU, Accuracy, Precision, Recall 等指標 (因為我骨折檢測沒做出來，因此顯示的是舟骨區域的指標)
+
+    \end{itemize}
+
+    \paragraph{train.py}
+    \begin{itemize}
+        \item 訓練偵測舟骨的模型
+    \end{itemize}
+
+    \paragraph{tools}
+    存放模型的定義、以及一些會用到的函式
+    \begin{itemize}
+        \item \verb"basic_load.py" : 提供 ui 進行基本的讀取操作
+        \item \verb"dataloader.py" : 提供 train 讀取資料集的服務，class 繼承自 torch.dataset
+        \item \verb"fasterRCNN.py" : 實現 fasterRCNN，依賴另外定義的部件 ROI 及 RPN 
+        \item \verb"tool.py" : 各種供給模型運算的工具函式，例如計算 iou、計算loss、旋轉框轉換...等等
+    \end{itemize}
